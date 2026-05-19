@@ -8,6 +8,7 @@ RUN npm run build
 
 # Stage 2: Final Image
 FROM node:20-alpine
+ENV NODE_ENV=production
 WORKDIR /app
 
 # Copy backend

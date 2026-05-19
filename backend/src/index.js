@@ -12,10 +12,9 @@ app.use(cors());
 app.use(express.json());
 app.use(morgan('dev'));
 
-// Health Check Route for UptimeRobot
-app.all(['/', '/health'], (req, res) => {
-  res.status(200).send('OK');
-});
+// Health Check Routes
+app.get('/', (req, res) => res.status(200).send('OK'));
+app.get('/health', (req, res) => res.status(200).send('OK'));
 
 // Routes
 app.use('/api/auth', require('./routes/authRoutes'));
@@ -29,7 +28,7 @@ const frontendDist = path.join(__dirname, '../../frontend/dist');
 app.use(express.static(frontendDist));
 
 // Handle SPA (React Router) - Redirect all non-API requests to index.html
-app.get('*', (req, res) => {
+app.get('(.*)', (req, res) => {
   res.sendFile(path.join(frontendDist, 'index.html'));
 });
 
