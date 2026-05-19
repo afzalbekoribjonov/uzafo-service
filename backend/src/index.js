@@ -27,8 +27,11 @@ app.use('/api/messages', require('./routes/messageRoutes'));
 const frontendDist = path.join(__dirname, '../../frontend/dist');
 app.use(express.static(frontendDist));
 
-// Handle SPA (React Router) - Redirect all non-API requests to index.html
-app.get('(.*)', (req, res) => {
+// Handle SPA (React Router) - Catch-all middleware
+app.use((req, res, next) => {
+  if (req.path.startsWith('/api')) {
+    return next();
+  }
   res.sendFile(path.join(frontendDist, 'index.html'));
 });
 
