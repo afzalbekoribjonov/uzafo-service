@@ -12,8 +12,7 @@ app.use(cors());
 app.use(express.json());
 app.use(morgan('dev'));
 
-// Health Check Routes
-app.get('/', (req, res) => res.status(200).send('OK'));
+// Health Check Route
 app.get('/health', (req, res) => res.status(200).send('OK'));
 
 // Routes
@@ -24,18 +23,12 @@ app.use('/api/payments', require('./routes/paymentRoutes'));
 app.use('/api/messages', require('./routes/messageRoutes'));
 
 // Serve Frontend Build
-const frontendDist = process.env.NODE_ENV === 'production' 
-  ? path.join(__dirname, '../../frontend/dist') // Local structure
-  : path.join(__dirname, '../../frontend/dist'); // This path needs to be correct for both
-
-// Let's debug this: in Docker /app/backend/src/index.js is the file. 
-// So ../../frontend/dist is /app/frontend/dist
 const productionDist = path.join(__dirname, '../../frontend/dist');
 app.use(express.static(productionDist));
 
 // Handle SPA
 app.use((req, res, next) => {
-  if (req.path.startsWith('/api')) {
+  if (req.path.startsWith('/api') || req.path === '/health') {
     return next();
   }
   res.sendFile(path.join(productionDist, 'index.html'));
