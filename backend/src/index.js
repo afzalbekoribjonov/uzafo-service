@@ -24,13 +24,6 @@ app.use('/api/messages', require('./routes/messageRoutes'));
 
 // Serve Frontend Build
 const productionDist = path.join(__dirname, '../../frontend/dist');
-console.log('Serving static files from:', productionDist);
-
-const fs = require('fs');
-if (!fs.existsSync(productionDist)) {
-  console.error('ERROR: Dist folder not found at:', productionDist);
-}
-
 app.use(express.static(productionDist));
 
 // Handle SPA
