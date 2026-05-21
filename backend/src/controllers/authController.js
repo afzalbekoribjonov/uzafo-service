@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 
-const ADMIN_USERNAME = process.env.ADMIN_USERNAME || 'uzafo';
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || '12345678';
+const ADMIN_USERNAME = process.env.ADMIN_USERNAME || 'uzafo-service-admin';
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'admin_1234';
 const JWT_SECRET = process.env.JWT_SECRET || 'uzafo_secret_key';
 
 const login = async (req, res) => {

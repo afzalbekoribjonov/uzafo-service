@@ -64,13 +64,23 @@ const deletePayment = async (req, res) => {
 const getPublicReceipt = async (req, res) => {
   const { id } = req.params;
 
+  console.log(`Fetching public receipt for ID: ${id}`);
+
   const { data, error } = await supabase
     .from('payments')
-    .select('*, projects(name, client_id, clients(name))')
+    .select('*, projects(*, clients(*))')
     .eq('id', id)
     .single();
 
-  if (error || !data) return res.status(404).json({ error: 'Chek topilmadi' });
+  if (error) {
+    console.error('Supabase Error in getPublicReceipt:', error);
+    return res.status(404).json({ error: 'Chek topilmadi', details: error.message });
+  }
+  
+  if (!data) {
+    console.log('No receipt found for ID:', id);
+    return res.status(404).json({ error: 'Chek topilmadi' });
+  }
   
   res.json(data);
 };

@@ -1,16 +1,23 @@
 import axios from 'axios';
-import { useAuthStore } from '@/stores/authStore';
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5000/api',
+  baseURL: '/api',
 });
 
 // Request interceptor to add JWT token
 api.interceptors.request.use(
   (config) => {
-    const token = useAuthStore.getState().token;
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+    // Get token from localStorage to avoid circular dependency with authStore
+    const authData = localStorage.getItem('uzafo_auth');
+    if (authData) {
+      try {
+        const { state } = JSON.parse(authData);
+        if (state?.token) {
+          config.headers.Authorization = `Bearer ${state.token}`;
+        }
+      } catch (e) {
+        console.error('Error parsing auth data from localStorage', e);
+      }
     }
     return config;
   },
@@ -24,7 +31,11 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      useAuthStore.getState().logout();
+      // Clear auth data and redirect if needed
+      localStorage.removeItem('uzafo_auth');
+      if (window.location.pathname.startsWith('/dashboard')) {
+        window.location.href = '/login';
+      }
     }
     return Promise.reject(error);
   }
