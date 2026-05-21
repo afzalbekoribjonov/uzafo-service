@@ -156,24 +156,14 @@ export default function ClientPortalPage({ slug }: { slug: string }) {
                                 <td className="px-6 py-4 text-gray-300">{formatDate(payment.paid_at)}</td>
                                 <td className="px-6 py-4 font-bold">{formatCurrency(payment.amount, payment.currency)}</td>
                                 <td className="px-6 py-4">
-                                  {(() => {
-                                    const hostname = window.location.hostname;
-                                    const isLocalhost = hostname === 'localhost' || hostname === '127.0.0.1';
-                                    const receiptUrl = isLocalhost 
-                                      ? `/receipt/${payment.id}`
-                                      : `https://payments.uzafo.uz/receipt/${payment.id}`;
-                                      
-                                    return (
-                                      <a 
-                                        href={receiptUrl} 
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="inline-flex items-center gap-1.5 text-indigo-400 hover:text-indigo-300 transition-colors font-medium"
-                                      >
-                                        Ko'rish <ExternalLink size={14} />
-                                      </a>
-                                    );
-                                  })()}
+                                  <a 
+                                    href={`/receipt/${payment.id}`} 
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-flex items-center gap-1.5 text-indigo-400 hover:text-indigo-300 transition-colors font-medium"
+                                  >
+                                    Ko'rish <ExternalLink size={14} />
+                                  </a>
                                 </td>
                               </tr>
                             ))
