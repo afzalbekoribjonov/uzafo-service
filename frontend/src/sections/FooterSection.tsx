@@ -31,40 +31,35 @@ export default function FooterSection() {
           </div>
 
           {/* Quick Links */}
-          <div>
-            <h4 className="text-sm font-bold uppercase tracking-wider mb-6" style={{ color: 'var(--text-primary)' }}>
-              Navigatsiya
-            </h4>
-            <ul className="space-y-3">
-              <li>
-                <button 
-                  onClick={() => scrollTo('xizmatlar')} 
-                  className="text-sm transition-colors hover:text-indigo-400" 
-                  style={{ color: 'var(--text-secondary)' }}
-                >
-                  Xizmatlar
-                </button>
-              </li>
-              <li>
-                <button 
-                  onClick={() => scrollTo('biz-haqimizda')} 
-                  className="text-sm transition-colors hover:text-indigo-400" 
-                  style={{ color: 'var(--text-secondary)' }}
-                >
-                  Biz haqimizda
-                </button>
-              </li>
-              <li>
-                <button 
-                  onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} 
-                  className="text-sm transition-colors hover:text-indigo-400" 
-                  style={{ color: 'var(--text-secondary)' }}
-                >
-                  Bosh sahifa
-                </button>
-              </li>
-            </ul>
-          </div>
+          <ul className="space-y-3 pt-2">
+            <li>
+              <button 
+                onClick={() => scrollTo('xizmatlar')} 
+                className="text-sm transition-colors hover:text-indigo-400" 
+                style={{ color: 'var(--text-secondary)' }}
+              >
+                Xizmatlar
+              </button>
+            </li>
+            <li>
+              <button 
+                onClick={() => scrollTo('biz-haqimizda')} 
+                className="text-sm transition-colors hover:text-indigo-400" 
+                style={{ color: 'var(--text-secondary)' }}
+              >
+                Biz haqimizda
+              </button>
+            </li>
+            <li>
+              <button 
+                onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} 
+                className="text-sm transition-colors hover:text-indigo-400" 
+                style={{ color: 'var(--text-secondary)' }}
+              >
+                Bosh sahifa
+              </button>
+            </li>
+          </ul>
 
           {/* Contact Info */}
           <div>
