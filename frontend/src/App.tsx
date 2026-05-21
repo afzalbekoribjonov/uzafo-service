@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate, useParams } from 'react-router-dom';
 import HomePage from '@/pages/HomePage';
 import LoginPage from '@/pages/LoginPage';
 import ServiceDetailPage from '@/pages/services/ServiceDetailPage';
@@ -34,7 +34,7 @@ export default function App() {
   if (isPayments) {
     return (
       <Routes>
-        <Route path="/:id" element={<ReceiptPage />} />
+        <Route path="/receipt/:id" element={<ReceiptPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     );
@@ -71,9 +71,17 @@ export default function App() {
   return (
     <Routes>
       <Route path="/" element={<HomePage />} />
+      {/* Client Portal on main domain for Render Free compatibility */}
+      <Route path="/p/:slug" element={<ClientPortalSlugWrapper />} />
       <Route path="/services/:id" element={<ServiceDetailPage />} />
       <Route path="/receipt/:id" element={<ReceiptPage />} />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
+}
+
+// Helper to get slug from URL params
+function ClientPortalSlugWrapper() {
+  const { slug } = useParams();
+  return <ClientPortalPage slug={slug || ''} />;
 }
