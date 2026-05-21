@@ -76,10 +76,4 @@ export default function App() {
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
-  }
-
-// Helper to get slug from URL params
-function ClientPortalSlugWrapper() {
-  const { slug } = useParams();
-  return <ClientPortalPage slug={slug || ''} />;
 }
