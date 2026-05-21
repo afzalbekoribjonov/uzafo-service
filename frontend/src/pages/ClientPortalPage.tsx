@@ -156,13 +156,24 @@ export default function ClientPortalPage({ slug }: { slug: string }) {
                                 <td className="px-6 py-4 text-gray-300">{formatDate(payment.paid_at)}</td>
                                 <td className="px-6 py-4 font-bold">{formatCurrency(payment.amount, payment.currency)}</td>
                                 <td className="px-6 py-4">
-                                  <a 
-                                    href={`/receipt/${payment.id}`} 
-                                    target="_blank"
-                                    className="inline-flex items-center gap-1.5 text-indigo-400 hover:text-indigo-300 transition-colors font-medium"
-                                  >
-                                    Ko'rish <ExternalLink size={14} />
-                                  </a>
+                                  {(() => {
+                                    const hostname = window.location.hostname;
+                                    const isLocalhost = hostname === 'localhost' || hostname === '127.0.0.1';
+                                    const receiptUrl = isLocalhost 
+                                      ? `/receipt/${payment.id}`
+                                      : `https://payments.uzafo.uz/${payment.id}`;
+                                      
+                                    return (
+                                      <a 
+                                        href={receiptUrl} 
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="inline-flex items-center gap-1.5 text-indigo-400 hover:text-indigo-300 transition-colors font-medium"
+                                      >
+                                        Ko'rish <ExternalLink size={14} />
+                                      </a>
+                                    );
+                                  })()}
                                 </td>
                               </tr>
                             ))

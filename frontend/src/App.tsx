@@ -27,9 +27,20 @@ export default function App() {
   }
 
   const isAdmin = subdomain === 'admin';
-  const isClientTenant = subdomain && !['www', 'uzafo', 'admin', 'api'].includes(subdomain);
+  const isPayments = subdomain === 'payments';
+  const isClientTenant = subdomain && !['www', 'uzafo', 'admin', 'api', 'payments'].includes(subdomain);
 
-  // 1. Client Tenant View (mijoz.uzafo.uz)
+  // 1. Payments View (payments.uzafo.uz)
+  if (isPayments) {
+    return (
+      <Routes>
+        <Route path="/:id" element={<ReceiptPage />} />
+        <Route path="*" element={<NotFoundPage />} />
+      </Routes>
+    );
+  }
+
+  // 2. Client Tenant View (mijoz.uzafo.uz)
   if (isClientTenant && subdomain) {
     return (
       <Routes>
