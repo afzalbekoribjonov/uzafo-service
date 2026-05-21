@@ -27,20 +27,9 @@ export default function App() {
   }
 
   const isAdmin = subdomain === 'admin';
-  const isPayments = subdomain === 'payments';
-  const isClientTenant = subdomain && !['www', 'uzafo', 'admin', 'api', 'payments'].includes(subdomain);
+  const isClientTenant = subdomain && !['www', 'uzafo', 'admin', 'api'].includes(subdomain);
 
-  // 1. Payments View (payments.uzafo.uz)
-  if (isPayments) {
-    return (
-      <Routes>
-        <Route path="/receipt/:id" element={<ReceiptPage />} />
-        <Route path="*" element={<NotFoundPage />} />
-      </Routes>
-    );
-  }
-
-  // 2. Client Tenant View (mijoz.uzafo.uz)
+  // 1. Client Tenant View (Legacy subdomain logic)
   if (isClientTenant && subdomain) {
     return (
       <Routes>
@@ -78,7 +67,8 @@ export default function App() {
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
-}
+  }
+
 
 // Helper to get slug from URL params
 function ClientPortalSlugWrapper() {
