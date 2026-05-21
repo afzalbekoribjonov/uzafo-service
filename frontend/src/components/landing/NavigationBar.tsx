@@ -31,23 +31,26 @@ export default function NavigationBar() {
   }, [prevScrollPos]);
 
   const scrollTo = (id: string) => {
-    setMobileOpen(false);
-    // Use requestAnimationFrame to ensure the menu close animation doesn't interfere with scrolling
-    requestAnimationFrame(() => {
+    // If mobile menu is open, close it first
+    if (mobileOpen) {
+      setMobileOpen(false);
+    }
+
+    // Small delay to allow menu animation to complete or at least start closing
+    // This is crucial for mobile devices where animations can block scrolling
+    setTimeout(() => {
       const el = document.getElementById(id);
       if (el) {
         const offset = 88; // Height of the fixed navbar
-        const bodyRect = document.body.getBoundingClientRect().top;
-        const elementRect = el.getBoundingClientRect().top;
-        const elementPosition = elementRect - bodyRect;
-        const offsetPosition = elementPosition - offset;
+        const elementPosition = el.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.pageYOffset - offset;
 
         window.scrollTo({
           top: offsetPosition,
           behavior: 'smooth'
         });
       }
-    });
+    }, mobileOpen ? 300 : 0); // Only delay if menu was open
   };
 
   return (
