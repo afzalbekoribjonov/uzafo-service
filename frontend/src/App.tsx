@@ -62,12 +62,6 @@ export default function App() {
       <Route path="/" element={<HomePage />} />
       <Route path="/services/:id" element={<ServiceDetailPage />} />
       <Route path="/receipt/:id" element={<ReceiptPage />} />
-      <Route path="/login" element={<LoginPage />} />
-      <Route path="/dashboard" element={<AuthGuard><DashboardLayout /></AuthGuard>}>
-        <Route index element={<DashboardHome />} />
-        <Route path="clients" element={<ClientsPage />} />
-        <Route path="projects" element={<ProjectsPage />} />
-      </Route>
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
