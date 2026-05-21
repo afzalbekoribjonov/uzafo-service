@@ -80,6 +80,7 @@ const deleteClient = async (req, res) => {
 module.exports = {
   getClients,
   getClientById,
+  getPublicClientBySlug,
   createClient,
   updateClient,
   deleteClient
