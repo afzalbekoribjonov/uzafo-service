@@ -13,7 +13,12 @@ app.use(express.json());
 app.use(morgan('dev'));
 
 // Health Check Route
-app.get('/health', (req, res) => res.status(200).send('OK'));
+app.all('/health', (req, res) => {
+  if (req.method === 'HEAD' || req.method === 'GET') {
+    return res.status(200).send('OK');
+  }
+  res.status(405).send('Method Not Allowed');
+});
 
 // Routes
 app.use('/api/auth', require('./routes/authRoutes'));
@@ -26,11 +31,14 @@ app.use('/api/messages', require('./routes/messageRoutes'));
 const productionDist = path.join(__dirname, '../../frontend/dist');
 app.use(express.static(productionDist));
 
-// Handle SPA
+// Handle SPA and 404s
 app.use((req, res, next) => {
-  if (req.path.startsWith('/api') || req.path === '/health') {
-    return next();
+  // If it's an API request that wasn't caught by the routes above, return 404
+  if (req.path.startsWith('/api')) {
+    return res.status(404).json({ error: 'API endpoint topilmadi' });
   }
+  // For all other requests (web pages, non-existent slugs), serve the SPA
+  // React Router will handle the 404 UI on the client side
   res.sendFile(path.join(productionDist, 'index.html'));
 });
 

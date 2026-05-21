@@ -8,6 +8,7 @@ import DashboardLayout from '@/components/dashboard/DashboardLayout';
 import DashboardHome from '@/pages/dashboard/DashboardHome';
 import ClientsPage from '@/pages/dashboard/ClientsPage';
 import ProjectsPage from '@/pages/dashboard/ProjectsPage';
+import NotFoundPage from '@/pages/NotFoundPage';
 
 export default function App() {
   return (
@@ -21,6 +22,8 @@ export default function App() {
         <Route path="clients" element={<ClientsPage />} />
         <Route path="projects" element={<ProjectsPage />} />
       </Route>
+      {/* Catch-all 404 route */}
+      <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
 }
