@@ -32,8 +32,22 @@ export default function NavigationBar() {
 
   const scrollTo = (id: string) => {
     setMobileOpen(false);
-    const el = document.getElementById(id);
-    if (el) el.scrollIntoView({ behavior: 'smooth' });
+    // Use requestAnimationFrame to ensure the menu close animation doesn't interfere with scrolling
+    requestAnimationFrame(() => {
+      const el = document.getElementById(id);
+      if (el) {
+        const offset = 88; // Height of the fixed navbar
+        const bodyRect = document.body.getBoundingClientRect().top;
+        const elementRect = el.getBoundingClientRect().top;
+        const elementPosition = elementRect - bodyRect;
+        const offsetPosition = elementPosition - offset;
+
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth'
+        });
+      }
+    });
   };
 
   return (
@@ -84,6 +98,16 @@ export default function NavigationBar() {
             Biz haqimizda
             <span className="absolute bottom-[-4px] left-0 h-[2px] w-full origin-center scale-x-0 transition-transform duration-300 group-hover:scale-x-100" style={{ background: 'var(--accent-indigo)' }} />
           </button>
+          <button
+            onClick={() => scrollTo('boglanish')}
+            className="relative text-[17px] font-semibold transition-colors duration-200 group"
+            style={{ color: 'var(--text-secondary)' }}
+            onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--text-primary)')}
+            onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--text-secondary)')}
+          >
+            Bog'lanish
+            <span className="absolute bottom-[-4px] left-0 h-[2px] w-full origin-center scale-x-0 transition-transform duration-300 group-hover:scale-x-100" style={{ background: 'var(--accent-indigo)' }} />
+          </button>
         </div>
 
         {/* Mobile hamburger */}
@@ -105,6 +129,7 @@ export default function NavigationBar() {
             <div className="flex flex-col p-8 gap-6">
               <button onClick={() => scrollTo('xizmatlar')} className="text-left text-lg font-semibold" style={{ color: 'var(--text-secondary)' }}>Xizmatlar</button>
               <button onClick={() => scrollTo('biz-haqimizda')} className="text-left text-lg font-semibold" style={{ color: 'var(--text-secondary)' }}>Biz haqimizda</button>
+              <button onClick={() => scrollTo('boglanish')} className="text-left text-lg font-semibold" style={{ color: 'var(--text-secondary)' }}>Bog'lanish</button>
             </div>
           </motion.div>
         )}
