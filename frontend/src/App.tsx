@@ -30,7 +30,7 @@ export default function App() {
   const isClientTenant = subdomain && !['www', 'uzafo', 'admin', 'api'].includes(subdomain);
 
   // 1. Client Tenant View (mijoz.uzafo.uz)
-  if (isClientTenant) {
+  if (isClientTenant && subdomain) {
     return (
       <Routes>
         <Route path="/" element={<ClientPortalPage slug={subdomain} />} />
