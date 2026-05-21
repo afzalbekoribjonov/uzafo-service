@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import HomePage from '@/pages/HomePage';
 import LoginPage from '@/pages/LoginPage';
 import ServiceDetailPage from '@/pages/services/ServiceDetailPage';
@@ -45,7 +45,8 @@ export default function App() {
     return (
       <Routes>
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/" element={<AuthGuard><DashboardLayout /></AuthGuard>}>
+        <Route path="/" element={<Navigate to="/dashboard" replace />} />
+        <Route path="/dashboard" element={<AuthGuard><DashboardLayout /></AuthGuard>}>
           <Route index element={<DashboardHome />} />
           <Route path="clients" element={<ClientsPage />} />
           <Route path="projects" element={<ProjectsPage />} />
