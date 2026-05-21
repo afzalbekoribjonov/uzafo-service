@@ -39,7 +39,7 @@ export default function ProjectDetailModal({ project, onClose }: ProjectDetailMo
     const isLocalhost = hostname === 'localhost' || hostname === '127.0.0.1';
     const url = isLocalhost 
       ? `${window.location.origin}/receipt/${paymentId}`
-      : `https://uzafo.uz/receipt/${paymentId}`;
+      : `https://payments.uzafo.uz/receipt/${paymentId}`;
       
     navigator.clipboard.writeText(url);
     toast.success("Chek havolasi nusxalandi");

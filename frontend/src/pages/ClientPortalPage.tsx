@@ -161,7 +161,7 @@ export default function ClientPortalPage({ slug }: { slug: string }) {
                                     const isLocalhost = hostname === 'localhost' || hostname === '127.0.0.1';
                                     const receiptUrl = isLocalhost 
                                       ? `/receipt/${payment.id}`
-                                      : `https://uzafo.uz/receipt/${payment.id}`;
+                                      : `https://payments.uzafo.uz/receipt/${payment.id}`;
                                       
                                     return (
                                       <a 
