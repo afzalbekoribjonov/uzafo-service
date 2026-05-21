@@ -1,6 +1,7 @@
 export interface Client {
   id: string;
   name: string;
+  slug: string;
   phone: string;
   email?: string;
   createdAt: string;

@@ -12,6 +12,7 @@ interface ClientFormModalProps {
 export default function ClientFormModal({ client, onClose }: ClientFormModalProps) {
   const isEdit = !!client;
   const [name, setName] = useState(client?.name || '');
+  const [slug, setSlug] = useState(client?.slug || '');
   const [phone, setPhone] = useState(client?.phone || '');
   const [email, setEmail] = useState(client?.email || '');
   const [errors, setErrors] = useState<Record<string, boolean>>({});
@@ -22,9 +23,24 @@ export default function ClientFormModal({ client, onClose }: ClientFormModalProp
   const updateClient = useDataStore((s) => s.updateClient);
   const toast = useToast();
 
+  const generateSlug = (val: string) => {
+    return val
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/(^-|-$)/g, '');
+  };
+
+  const handleNameChange = (val: string) => {
+    setName(val);
+    if (!isEdit) {
+      setSlug(generateSlug(val));
+    }
+  };
+
   const validate = () => {
     const newErrors: Record<string, boolean> = {};
     if (!name.trim()) newErrors.name = true;
+    if (!slug.trim()) newErrors.slug = true;
     if (!phone.trim()) newErrors.phone = true;
     setErrors(newErrors);
     if (Object.keys(newErrors).length > 0) {
@@ -39,11 +55,12 @@ export default function ClientFormModal({ client, onClose }: ClientFormModalProp
     if (!validate()) return;
     setLoading(true);
     try {
+      const payload = { name, slug, phone, email: email || undefined };
       if (isEdit && client) {
-        await updateClient(client.id, { name, phone, email: email || undefined });
+        await updateClient(client.id, payload);
         toast.success('Mijoz muvaffaqiyatli yangilandi');
       } else {
-        await addClient({ name, phone, email: email || undefined });
+        await addClient(payload);
         toast.success('Yangi mijoz qo\'shildi');
       }
       onClose();
@@ -88,7 +105,7 @@ export default function ClientFormModal({ client, onClose }: ClientFormModalProp
               type="text"
               value={name}
               disabled={loading}
-              onChange={(e) => { setName(e.target.value); setErrors((p) => ({ ...p, name: false })); }}
+              onChange={(e) => { handleNameChange(e.target.value); setErrors((p) => ({ ...p, name: false })); }}
               placeholder="Kompaniya nomini kiriting"
               className="w-full px-4 py-3 rounded-xl text-sm outline-none transition-all"
               style={{
@@ -102,6 +119,35 @@ export default function ClientFormModal({ client, onClose }: ClientFormModalProp
               onBlur={(e) => !errors.name && (e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)')}
             />
             {errors.name && <p className="text-xs mt-1" style={{ color: 'var(--status-danger)' }}>Bu maydonni to'ldirish shart</p>}
+          </div>
+
+          {/* Slug */}
+          <div>
+            <label className="block text-xs font-medium uppercase tracking-wider mb-1.5" style={{ color: 'var(--text-muted)' }}>
+              Subdomain (Slug) <span style={{ color: 'var(--status-danger)' }}>*</span>
+            </label>
+            <div className="relative">
+              <input
+                type="text"
+                value={slug}
+                disabled={loading}
+                onChange={(e) => { setSlug(generateSlug(e.target.value)); setErrors((p) => ({ ...p, slug: false })); }}
+                placeholder="it-academy"
+                className="w-full px-4 py-3 pr-24 rounded-xl text-sm outline-none transition-all"
+                style={{
+                  background: 'var(--bg-space)',
+                  border: `1px solid ${errors.slug ? 'var(--status-danger)' : 'rgba(255,255,255,0.08)'}`,
+                  color: 'var(--accent-indigo-light)',
+                  animation: shaking && errors.slug ? 'shake 0.4s ease' : 'none',
+                  opacity: loading ? 0.7 : 1
+                }}
+                onFocus={(e) => !errors.slug && (e.currentTarget.style.borderColor = 'rgba(129,140,248,0.5)')}
+                onBlur={(e) => !errors.slug && (e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)')}
+              />
+              <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-medium text-gray-500">.uzafo.uz</span>
+            </div>
+            {errors.slug && <p className="text-xs mt-1" style={{ color: 'var(--status-danger)' }}>Slug to'ldirilishi shart</p>}
+            <p className="text-[10px] mt-1.5 text-gray-500">Ushbu nom mijoz uchun shaxsiy subdomain sifatida ishlatiladi.</p>
           </div>
 
           {/* Phone */}

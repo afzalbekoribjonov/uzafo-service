@@ -4,6 +4,7 @@
 CREATE TABLE IF NOT EXISTS clients (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     name TEXT NOT NULL,
+    slug TEXT UNIQUE, -- Subdomain identifier
     phone TEXT NOT NULL,
     email TEXT,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
