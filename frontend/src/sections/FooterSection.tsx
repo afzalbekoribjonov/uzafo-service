@@ -76,16 +76,16 @@ export default function FooterSection() {
                 <div className="p-2 rounded-lg bg-white/5 border border-white/10">
                   <Mail size={16} className="text-indigo-400" />
                 </div>
-                <a href="mailto:info@uzafo.uz" className="text-sm hover:text-indigo-400 transition-colors" style={{ color: 'var(--text-secondary)' }}>
-                  info@uzafo.uz
+                <a href="mailto:oribjonovafzaliy@gmail.com" className="text-sm hover:text-indigo-400 transition-colors" style={{ color: 'var(--text-secondary)' }}>
+                  oribjonovafzaliy@gmail.com
                 </a>
               </li>
               <li className="flex items-center gap-3">
                 <div className="p-2 rounded-lg bg-white/5 border border-white/10">
                   <Phone size={16} className="text-indigo-400" />
                 </div>
-                <a href="tel:+998901234567" className="text-sm hover:text-indigo-400 transition-colors" style={{ color: 'var(--text-secondary)' }}>
-                  +998 (90) 123-45-67
+                <a href="tel:+998941080916" className="text-sm hover:text-indigo-400 transition-colors" style={{ color: 'var(--text-secondary)' }}>
+                  +998 (94) 108-09-16
                 </a>
               </li>
               <li className="flex items-center gap-3">
