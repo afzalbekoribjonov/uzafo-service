@@ -80,37 +80,25 @@ export default function NavigationBar() {
         </Link>
 
         {/* Desktop nav */}
-        <div className="hidden sm:flex items-center gap-10">
-          <button
-            onClick={() => scrollTo('xizmatlar')}
-            className="relative text-[17px] font-semibold transition-colors duration-200 group"
-            style={{ color: 'var(--text-secondary)' }}
-            onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--text-primary)')}
-            onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--text-secondary)')}
-          >
-            Xizmatlar
-            <span className="absolute bottom-[-4px] left-0 h-[2px] w-full origin-center scale-x-0 transition-transform duration-300 group-hover:scale-x-100" style={{ background: 'var(--accent-indigo)' }} />
-          </button>
-          <button
-            onClick={() => scrollTo('biz-haqimizda')}
-            className="relative text-[17px] font-semibold transition-colors duration-200 group"
-            style={{ color: 'var(--text-secondary)' }}
-            onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--text-primary)')}
-            onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--text-secondary)')}
-          >
-            Biz haqimizda
-            <span className="absolute bottom-[-4px] left-0 h-[2px] w-full origin-center scale-x-0 transition-transform duration-300 group-hover:scale-x-100" style={{ background: 'var(--accent-indigo)' }} />
-          </button>
-          <button
-            onClick={() => scrollTo('boglanish')}
-            className="relative text-[17px] font-semibold transition-colors duration-200 group"
-            style={{ color: 'var(--text-secondary)' }}
-            onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--text-primary)')}
-            onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--text-secondary)')}
-          >
-            Bog'lanish
-            <span className="absolute bottom-[-4px] left-0 h-[2px] w-full origin-center scale-x-0 transition-transform duration-300 group-hover:scale-x-100" style={{ background: 'var(--accent-indigo)' }} />
-          </button>
+        <div className="hidden sm:flex items-center gap-8 lg:gap-10">
+          {[
+            { id: 'xizmatlar', label: 'Xizmatlar' },
+            { id: 'biz-haqimizda', label: 'Biz haqimizda' },
+            { id: 'xavfsizlik', label: 'Xavfsizlik' },
+            { id: 'boglanish', label: "Bog'lanish" },
+          ].map((item) => (
+            <button
+              key={item.id}
+              onClick={() => scrollTo(item.id)}
+              className="relative text-[17px] font-semibold transition-colors duration-200 group"
+              style={{ color: 'var(--text-secondary)' }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--text-primary)')}
+              onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--text-secondary)')}
+            >
+              {item.label}
+              <span className="absolute bottom-[-4px] left-0 h-[2px] w-full origin-center scale-x-0 transition-transform duration-300 group-hover:scale-x-100" style={{ background: 'var(--accent-indigo)' }} />
+            </button>
+          ))}
         </div>
 
         {/* Mobile hamburger */}
@@ -119,22 +107,58 @@ export default function NavigationBar() {
         </button>
       </div>
 
-      {/* Mobile menu */}
+      {/* Mobile drawer (slides in from the left) */}
       <AnimatePresence>
         {mobileOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            className="absolute top-[88px] left-0 right-0 sm:hidden overflow-hidden"
-            style={{ background: 'rgba(5,5,5,0.98)', backdropFilter: 'blur(12px)', borderBottom: '1px solid rgba(255,255,255,0.06)' }}
-          >
-            <div className="flex flex-col p-8 gap-6">
-              <button onClick={() => scrollTo('xizmatlar')} className="text-left text-lg font-semibold" style={{ color: 'var(--text-secondary)' }}>Xizmatlar</button>
-              <button onClick={() => scrollTo('biz-haqimizda')} className="text-left text-lg font-semibold" style={{ color: 'var(--text-secondary)' }}>Biz haqimizda</button>
-              <button onClick={() => scrollTo('boglanish')} className="text-left text-lg font-semibold" style={{ color: 'var(--text-secondary)' }}>Bog'lanish</button>
-            </div>
-          </motion.div>
+          <>
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.25 }}
+              onClick={() => setMobileOpen(false)}
+              className="fixed inset-0 top-[88px] sm:hidden z-30"
+              style={{ background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(2px)' }}
+            />
+
+            {/* Panel */}
+            <motion.div
+              initial={{ x: '-100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '-100%' }}
+              transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
+              className="fixed top-[88px] left-0 bottom-0 w-[80%] max-w-[300px] sm:hidden z-40 flex flex-col"
+              style={{ background: 'rgba(8,8,16,0.98)', backdropFilter: 'blur(16px)', borderRight: '1px solid rgba(255,255,255,0.08)' }}
+            >
+              <nav className="flex flex-col p-6 gap-1">
+                {[
+                  { id: 'xizmatlar', label: 'Xizmatlar' },
+                  { id: 'biz-haqimizda', label: 'Biz haqimizda' },
+                  { id: 'xavfsizlik', label: 'Xavfsizlik' },
+                  { id: 'boglanish', label: "Bog'lanish" },
+                ].map((item) => (
+                  <button
+                    key={item.id}
+                    onClick={() => scrollTo(item.id)}
+                    className="text-left text-base font-semibold px-3 py-3.5 rounded-xl transition-colors hover:bg-white/5"
+                    style={{ color: 'var(--text-secondary)' }}
+                  >
+                    {item.label}
+                  </button>
+                ))}
+              </nav>
+
+              <div className="mt-auto p-6 border-t" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
+                <button onClick={() => scrollTo('boglanish')} className="gradient-btn w-full justify-center">
+                  Bepul konsultatsiya
+                </button>
+                <p className="text-xs text-center mt-4" style={{ color: 'var(--text-muted)' }}>
+                  &copy; {new Date().getFullYear()} Uzafo.uz
+                </p>
+              </div>
+            </motion.div>
+          </>
         )}
       </AnimatePresence>
     </motion.nav>

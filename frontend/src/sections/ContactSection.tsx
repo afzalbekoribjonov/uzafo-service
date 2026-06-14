@@ -12,23 +12,25 @@ export default function ContactSection() {
   const addMessage = useDataStore((s) => s.addMessage);
   const toast = useToast();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (isSubmitting) return;
     if (!email.trim() || !message.trim()) {
       toast.error("Iltimos, barcha maydonlarni to'ldiring");
       return;
     }
 
     setIsSubmitting(true);
-    
-    // Simulate network delay
-    setTimeout(() => {
-      addMessage({ email, content: message });
+    try {
+      await addMessage({ email: email.trim(), content: message.trim() });
       setEmail('');
       setMessage('');
-      setIsSubmitting(false);
       toast.success("Xabaringiz yuborildi. Tez orada bog'lanamiz!");
-    }, 800);
+    } catch {
+      toast.error("Xabar yuborilmadi. Iltimos, keyinroq qayta urinib ko'ring.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (

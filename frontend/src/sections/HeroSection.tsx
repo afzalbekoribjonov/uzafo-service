@@ -1,6 +1,12 @@
 import { motion } from 'framer-motion';
-import { ChevronDown, Mail } from 'lucide-react';
+import { ChevronDown, Mail, ShieldCheck, Headphones, Rocket } from 'lucide-react';
 import { useRef, useState, useEffect } from 'react';
+
+const trustPills = [
+  { icon: Rocket, label: '50+ loyiha' },
+  { icon: Headphones, label: "24/7 qo'llab-quvvatlash" },
+  { icon: ShieldCheck, label: 'Xavfsiz va himoyalangan' },
+];
 
 export default function HeroSection() {
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -81,6 +87,32 @@ export default function HeroSection() {
           <button onClick={scrollToContact} className="ghost-btn">
             Bog&apos;lanish <Mail size={18} />
           </button>
+        </motion.div>
+
+        {/* Trust pills */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1.1, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+          className="flex flex-wrap items-center justify-center gap-3 mt-10"
+        >
+          {trustPills.map((pill) => {
+            const Icon = pill.icon;
+            return (
+              <div
+                key={pill.label}
+                className="flex items-center gap-2 px-4 py-2 rounded-full text-sm"
+                style={{
+                  background: 'rgba(255,255,255,0.04)',
+                  border: '1px solid rgba(255,255,255,0.08)',
+                  color: 'var(--text-secondary)',
+                }}
+              >
+                <Icon size={15} style={{ color: 'var(--accent-indigo-light)' }} />
+                {pill.label}
+              </div>
+            );
+          })}
         </motion.div>
       </div>
 

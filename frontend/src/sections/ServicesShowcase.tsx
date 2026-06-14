@@ -1,66 +1,17 @@
 import { motion } from 'framer-motion';
-import { Briefcase, Globe, Smartphone, Brain, BotMessageSquare } from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
-import BlackHoleTransition from '@/components/BlackHoleTransition';
-
-const services = [
-  {
-    id: 'biznesni-avtomatlashtirish',
-    icon: Briefcase,
-    title: 'Biznesni avtomatlashtirish',
-    desc: 'Biznes jarayonlarini raqamli tizimga o\'tkazish va kundalik ishlarni avtomatlashtirish orqali samaradorlikni oshirish.',
-  },
-  {
-    id: 'telegram-ekotizimlari',
-    icon: BotMessageSquare,
-    title: 'Telegram Ekotizimlari',
-    desc: 'Murakkab Telegram botlar va WebApp ilovalar orqali mijozlarga xizmat ko\'rsatishni yangi bosqichga olib chiqish.',
-  },
-  {
-    id: 'ai-yechimlar',
-    icon: Brain,
-    title: 'Sun\'iy Intellekt Yechimlari',
-    desc: 'Loyiha va biznes jarayonlariga aqlli modellar va AI yordamchilarini integratsiya qilish.',
-  },
-  {
-    id: 'veb-saytlar',
-    icon: Globe,
-    title: 'Yuqori Sifatli Veb-saytlar',
-    desc: 'Har qanday qurilmaga moslashuvchan, tezkor va qidiruv tizimlarida (SEO) yaxshi chiquvchi professional veb-platformalar.',
-  },
-  {
-    id: 'mobil-ilovalar',
-    icon: Smartphone,
-    title: 'Mobil Ilovalar',
-    desc: 'iOS va Android qurilmalari uchun bir vaqtning o\'zida ishlovchi mukammal va qulay mobil dasturlar yaratish.',
-  },
-];
+import { services } from '@/data/services';
 
 export default function ServicesShowcase() {
   const navigate = useNavigate();
-  const [transitioning, setTransitioning] = useState<{ active: boolean; targetId: string | null }>({
-    active: false,
-    targetId: null
-  });
 
   const handleServiceClick = (id: string) => {
-    setTransitioning({ active: true, targetId: id });
-  };
-
-  const handleAnimationFinished = () => {
-    if (transitioning.targetId) {
-      navigate(`/services/${transitioning.targetId}`);
-    }
+    navigate(`/services/${id}`);
   };
 
   return (
     <section id="xizmatlar" className="py-20 px-6">
-      <BlackHoleTransition 
-        isExiting={transitioning.active} 
-        onFinished={handleAnimationFinished} 
-      />
-      
       <div className="max-w-[1200px] mx-auto">
         {/* Section header */}
         <motion.div
@@ -102,30 +53,36 @@ export default function ServicesShowcase() {
                   duration: 0.5,
                   ease: [0.16, 1, 0.3, 1],
                 }}
-                className="glass-panel p-8 cursor-pointer transition-all duration-400"
+                className="group glass-panel p-8 cursor-pointer transition-all duration-400 relative overflow-hidden"
                 onClick={() => handleServiceClick(service.id)}
                 style={{
                   transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
                 }}
                 whileHover={{
                   y: -4,
-                  borderColor: 'rgba(129,140,248,0.5)',
-                  boxShadow: '0 12px 40px rgba(79,70,229,0.15)',
+                  borderColor: `${service.color}80`,
+                  boxShadow: `0 12px 40px ${service.color}22`,
                 }}
               >
+                {/* Hover glow that adopts the service color */}
+                <div
+                  className="absolute -top-16 -right-16 w-40 h-40 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                  style={{ background: `radial-gradient(circle, ${service.color}33 0%, transparent 70%)` }}
+                />
+
                 {/* Icon */}
                 <div
-                  className="w-16 h-16 rounded-full flex items-center justify-center"
+                  className="w-16 h-16 rounded-2xl flex items-center justify-center transition-transform duration-400 group-hover:scale-110"
                   style={{
-                    background: 'rgba(79,70,229,0.15)',
-                    border: '1px solid rgba(79,70,229,0.3)',
+                    background: `linear-gradient(135deg, ${service.gradient[0]}26, ${service.gradient[1]}14)`,
+                    border: `1px solid ${service.color}40`,
                   }}
                 >
-                  <Icon size={28} color="#818CF8" />
+                  <Icon size={28} color={service.color} />
                 </div>
 
                 <h3
-                  className="text-lg font-semibold mt-5 tracking-[-0.01em]"
+                  className="text-lg font-semibold mt-5 tracking-[-0.01em] flex items-center gap-2"
                   style={{ color: 'var(--text-primary)' }}
                 >
                   {service.title}
@@ -136,6 +93,13 @@ export default function ServicesShowcase() {
                 >
                   {service.desc}
                 </p>
+
+                <div
+                  className="mt-6 inline-flex items-center gap-1.5 text-sm font-medium opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300"
+                  style={{ color: service.color }}
+                >
+                  Batafsil <ArrowUpRight size={16} />
+                </div>
               </motion.div>
             );
           })}

@@ -13,7 +13,6 @@ export default function FooterSection() {
 
   return (
     <footer
-      id="boglanish"
       className="w-full pt-16 pb-8 px-6"
       style={{ borderTop: '1px solid rgba(255,255,255,0.06)', background: 'rgba(5,5,5,0.4)' }}
     >

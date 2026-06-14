@@ -249,6 +249,7 @@ export const useDataStore = create<DataStore>((set, get) => ({
       set((state) => ({ messages: [normalized, ...state.messages] }));
     } catch (error) {
       console.error('Add message error:', error);
+      throw error;
     }
   },
 

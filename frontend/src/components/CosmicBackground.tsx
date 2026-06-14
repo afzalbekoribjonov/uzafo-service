@@ -135,18 +135,79 @@ export default function CosmicBackground() {
       ctx.translate(r.x, r.y);
       ctx.rotate(r.angle);
 
-      // Body
+      const flick = 0.7 + Math.sin(Date.now() * 0.04) * 0.15 + Math.random() * 0.15;
+
+      // Exhaust flame (drawn first, behind the body)
+      const flameLen = 28 * flick;
+      const fg = ctx.createLinearGradient(-13, 0, -13 - flameLen, 0);
+      fg.addColorStop(0, 'rgba(255,255,255,0.95)');
+      fg.addColorStop(0.25, 'rgba(255,214,102,0.9)');
+      fg.addColorStop(0.6, 'rgba(249,115,22,0.65)');
+      fg.addColorStop(1, 'rgba(239,68,68,0)');
       ctx.beginPath();
-      ctx.ellipse(0, 0, 15, 7, 0, 0, Math.PI * 2);
-      ctx.fillStyle = '#e2e8f0';
+      ctx.moveTo(-13, -4.5);
+      ctx.quadraticCurveTo(-13 - flameLen, 0, -13, 4.5);
+      ctx.closePath();
+      ctx.fillStyle = fg;
       ctx.fill();
-      
-      // Nose
+      // Inner hot core
       ctx.beginPath();
-      ctx.moveTo(10, -5);
-      ctx.quadraticCurveTo(22, 0, 10, 5);
+      ctx.moveTo(-13, -2.2);
+      ctx.quadraticCurveTo(-13 - flameLen * 0.55, 0, -13, 2.2);
+      ctx.closePath();
+      ctx.fillStyle = 'rgba(255,255,255,0.85)';
+      ctx.fill();
+
+      // Tail fins
+      ctx.fillStyle = '#dc2626';
+      ctx.beginPath();
+      ctx.moveTo(-8, -5.5);
+      ctx.lineTo(-16, -11);
+      ctx.lineTo(-12, -5);
+      ctx.closePath();
+      ctx.fill();
+      ctx.beginPath();
+      ctx.moveTo(-8, 5.5);
+      ctx.lineTo(-16, 11);
+      ctx.lineTo(-12, 5);
+      ctx.closePath();
+      ctx.fill();
+
+      // Fuselage (metallic capsule)
+      const bg = ctx.createLinearGradient(0, -7, 0, 7);
+      bg.addColorStop(0, '#ffffff');
+      bg.addColorStop(0.5, '#cbd5e1');
+      bg.addColorStop(1, '#8a97a8');
+      ctx.beginPath();
+      ctx.moveTo(-13, -6);
+      ctx.lineTo(8, -6);
+      ctx.lineTo(8, 6);
+      ctx.lineTo(-13, 6);
+      ctx.quadraticCurveTo(-17, 0, -13, -6);
+      ctx.closePath();
+      ctx.fillStyle = bg;
+      ctx.fill();
+
+      // Nose cone
+      ctx.beginPath();
+      ctx.moveTo(8, -6);
+      ctx.quadraticCurveTo(24, 0, 8, 6);
+      ctx.closePath();
       ctx.fillStyle = '#ef4444';
       ctx.fill();
+
+      // Accent stripe
+      ctx.fillStyle = 'rgba(79,70,229,0.9)';
+      ctx.fillRect(-2, -6, 4, 12);
+
+      // Cockpit window
+      ctx.beginPath();
+      ctx.arc(5, 0, 2.6, 0, Math.PI * 2);
+      ctx.fillStyle = '#38bdf8';
+      ctx.fill();
+      ctx.lineWidth = 1;
+      ctx.strokeStyle = 'rgba(255,255,255,0.85)';
+      ctx.stroke();
 
       ctx.restore();
 
@@ -207,16 +268,89 @@ export default function CosmicBackground() {
 
       ctx.save();
       ctx.translate(s.x, s.y);
-      ctx.rotate(s.angle + Math.PI / 4);
+      ctx.rotate(s.angle + 0.2);
 
-      // Solar Panels
-      ctx.fillStyle = '#2563eb';
-      ctx.fillRect(-18, -2, 10, 4);
-      ctx.fillRect(8, -2, 10, 4);
+      // Booms connecting the panels to the bus
+      ctx.strokeStyle = '#64748b';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.moveTo(-8, 0); ctx.lineTo(-13, 0); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(8, 0); ctx.lineTo(13, 0); ctx.stroke();
 
-      // Body
-      ctx.fillStyle = '#94a3b8';
-      ctx.fillRect(-4, -4, 8, 8);
+      // Solar panel wings (segmented photovoltaic cells)
+      const drawPanel = (sx: number) => {
+        const w = 22, h = 18, pad = 1.5, cols = 3, rows = 3;
+        ctx.fillStyle = '#0f172a';
+        ctx.fillRect(sx, -h / 2, w, h);
+        const cw = (w - pad * (cols + 1)) / cols;
+        const ch = (h - pad * (rows + 1)) / rows;
+        for (let row = 0; row < rows; row++) {
+          for (let col = 0; col < cols; col++) {
+            ctx.fillStyle = (row + col) % 2 === 0 ? '#2563eb' : '#1e3a8a';
+            ctx.fillRect(sx + pad + col * (cw + pad), -h / 2 + pad + row * (ch + pad), cw, ch);
+          }
+        }
+        // Sun glare across the panel
+        const gl = ctx.createLinearGradient(sx, -h / 2, sx + w, h / 2);
+        gl.addColorStop(0, 'rgba(255,255,255,0.28)');
+        gl.addColorStop(0.5, 'rgba(255,255,255,0)');
+        ctx.fillStyle = gl;
+        ctx.fillRect(sx, -h / 2, w, h);
+      };
+      drawPanel(-35);
+      drawPanel(13);
+
+      // Central bus wrapped in gold thermal foil
+      const bgd = ctx.createLinearGradient(0, -9, 0, 9);
+      bgd.addColorStop(0, '#fde68a');
+      bgd.addColorStop(0.5, '#d4a017');
+      bgd.addColorStop(1, '#8a6a1f');
+      ctx.fillStyle = bgd;
+      ctx.beginPath();
+      ctx.roundRect(-8, -9, 16, 18, 2);
+      ctx.fill();
+      // Foil crinkle lines
+      ctx.strokeStyle = 'rgba(120,90,20,0.5)';
+      ctx.lineWidth = 0.6;
+      for (let i = -6; i <= 6; i += 3) {
+        ctx.beginPath(); ctx.moveTo(-8, i); ctx.lineTo(8, i); ctx.stroke();
+      }
+      ctx.strokeStyle = 'rgba(255,255,255,0.25)';
+      ctx.lineWidth = 0.8;
+      ctx.beginPath(); ctx.roundRect(-8, -9, 16, 18, 2); ctx.stroke();
+
+      // High-gain dish antenna
+      ctx.save();
+      ctx.translate(0, -9);
+      ctx.rotate(-0.3);
+      ctx.fillStyle = '#e2e8f0';
+      ctx.beginPath();
+      ctx.ellipse(0, -3, 6, 3, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = '#94a3b8';
+      ctx.lineWidth = 0.8;
+      ctx.stroke();
+      ctx.strokeStyle = '#cbd5e1';
+      ctx.beginPath(); ctx.moveTo(0, -3); ctx.lineTo(0, 0); ctx.stroke();
+      ctx.fillStyle = '#64748b';
+      ctx.beginPath(); ctx.arc(0, -3, 1, 0, Math.PI * 2); ctx.fill();
+      ctx.restore();
+
+      // Communications mast
+      ctx.strokeStyle = '#94a3b8';
+      ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(0, 9); ctx.lineTo(0, 15); ctx.stroke();
+      ctx.fillStyle = '#cbd5e1';
+      ctx.beginPath(); ctx.arc(0, 15, 1.2, 0, Math.PI * 2); ctx.fill();
+
+      // Blinking navigation beacon
+      const blink = (Math.sin(Date.now() * 0.006) + 1) / 2;
+      ctx.beginPath();
+      ctx.arc(0, 0, 2, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(239,68,68,${0.4 + blink * 0.6})`;
+      ctx.shadowColor = '#ef4444';
+      ctx.shadowBlur = 6 * blink;
+      ctx.fill();
+      ctx.shadowBlur = 0;
 
       ctx.restore();
 
