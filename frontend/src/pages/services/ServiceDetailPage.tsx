@@ -3,6 +3,7 @@ import { useEffect, type ReactNode } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowLeft, ArrowRight, Check, ArrowUpRight, MessageCircle } from 'lucide-react';
 import CosmicBackground from '@/components/CosmicBackground';
+import { usePageMeta } from '@/hooks/usePageMeta';
 import { getService, services } from '@/data/services';
 import ServiceVisual from '@/components/service/ServiceVisual';
 import InteractiveDiagram from '@/components/service/InteractiveDiagram';
@@ -28,6 +29,12 @@ export default function ServiceDetailPage() {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [id]);
+
+  usePageMeta({
+    title: service ? `${service.title} — Uzafo` : 'Xizmat topilmadi — Uzafo',
+    description: service ? service.desc : 'Kechirasiz, bu xizmat topilmadi.',
+    path: `/services/${id ?? ''}`,
+  });
 
   if (!service) {
     return (

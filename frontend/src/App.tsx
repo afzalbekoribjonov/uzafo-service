@@ -3,6 +3,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import HomePage from '@/pages/HomePage';
 import AuthGuard from '@/components/AuthGuard';
 import PageLoader from '@/components/PageLoader';
+import { useRobots } from '@/hooks/usePageMeta';
 
 // Code-split secondary and heavy routes so landing visitors (uzafo.uz) don't
 // download the admin dashboard, charts and portal bundles up front.
@@ -34,6 +35,9 @@ export default function App() {
   const isAdmin = subdomain === 'admin';
   const isPayments = subdomain === 'payments';
   const isClientTenant = subdomain && !['www', 'uzafo', 'admin', 'api', 'payments'].includes(subdomain);
+
+  // Only the public marketing site should be indexed by search engines.
+  useRobots(Boolean(isAdmin || isPayments || isClientTenant));
 
   return (
     <Suspense fallback={<PageLoader />}>

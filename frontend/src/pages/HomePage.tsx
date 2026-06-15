@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
+import { usePageMeta } from '@/hooks/usePageMeta';
 import CosmicBackground from '@/components/CosmicBackground';
 import NavigationBar from '@/components/landing/NavigationBar';
 import HeroSection from '@/sections/HeroSection';
@@ -12,6 +13,13 @@ import FooterSection from '@/sections/FooterSection';
 
 export default function HomePage() {
   const location = useLocation();
+
+  usePageMeta({
+    title: "Uzafo — Biznesni avtomatlashtirish, veb-sayt, Telegram bot va AI yechimlar",
+    description:
+      "Uzafo Service — biznesingizni raqamlashtiramiz: zamonaviy veb-saytlar, Telegram botlar, mobil ilovalar, sun'iy intellekt yechimlari va biznes jarayonlarini avtomatlashtirish.",
+    path: '/',
+  });
 
   // Support navigating in from another page with a target section to scroll to.
   useEffect(() => {
