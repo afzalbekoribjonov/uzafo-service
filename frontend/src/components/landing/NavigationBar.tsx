@@ -1,7 +1,14 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, LayoutGrid, Info, ShieldCheck, Mail, ChevronRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+
+const mobileLinks = [
+  { id: 'xizmatlar', label: 'Xizmatlar', icon: LayoutGrid },
+  { id: 'biz-haqimizda', label: 'Biz haqimizda', icon: Info },
+  { id: 'xavfsizlik', label: 'Xavfsizlik', icon: ShieldCheck },
+  { id: 'boglanish', label: "Bog'lanish", icon: Mail },
+];
 
 export default function NavigationBar() {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -29,6 +36,16 @@ export default function NavigationBar() {
     window.addEventListener('scroll', onScroll);
     return () => window.removeEventListener('scroll', onScroll);
   }, [prevScrollPos]);
+
+  // Lock background scroll while the mobile drawer is open.
+  useEffect(() => {
+    if (!mobileOpen) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, [mobileOpen]);
 
   const scrollTo = (id: string) => {
     // If mobile menu is open, close it first
@@ -111,7 +128,7 @@ export default function NavigationBar() {
       <AnimatePresence>
         {mobileOpen && (
           <>
-            {/* Backdrop */}
+            {/* Backdrop — clearly dims the page behind the drawer */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -119,37 +136,67 @@ export default function NavigationBar() {
               transition={{ duration: 0.25 }}
               onClick={() => setMobileOpen(false)}
               className="fixed inset-0 top-[88px] sm:hidden z-30"
-              style={{ background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(2px)' }}
+              style={{ background: 'rgba(0,0,0,0.78)', backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)' }}
             />
 
-            {/* Panel */}
+            {/* Panel — distinct elevated surface */}
             <motion.div
               initial={{ x: '-100%' }}
               animate={{ x: 0 }}
               exit={{ x: '-100%' }}
               transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
-              className="fixed top-[88px] left-0 bottom-0 w-[80%] max-w-[300px] sm:hidden z-40 flex flex-col"
-              style={{ background: 'rgba(8,8,16,0.98)', backdropFilter: 'blur(16px)', borderRight: '1px solid rgba(255,255,255,0.08)' }}
+              className="fixed top-[88px] left-0 bottom-0 w-[82%] max-w-[320px] sm:hidden z-40 flex flex-col overflow-hidden"
+              style={{
+                background: 'linear-gradient(180deg, #16162F 0%, #0B0B18 100%)',
+                borderRight: '1px solid rgba(129,140,248,0.25)',
+                boxShadow: '16px 0 50px rgba(0,0,0,0.7)',
+              }}
             >
-              <nav className="flex flex-col p-6 gap-1">
-                {[
-                  { id: 'xizmatlar', label: 'Xizmatlar' },
-                  { id: 'biz-haqimizda', label: 'Biz haqimizda' },
-                  { id: 'xavfsizlik', label: 'Xavfsizlik' },
-                  { id: 'boglanish', label: "Bog'lanish" },
-                ].map((item) => (
-                  <button
-                    key={item.id}
-                    onClick={() => scrollTo(item.id)}
-                    className="text-left text-base font-semibold px-3 py-3.5 rounded-xl transition-colors hover:bg-white/5"
-                    style={{ color: 'var(--text-secondary)' }}
-                  >
-                    {item.label}
-                  </button>
-                ))}
+              {/* Indigo accent glow at the top */}
+              <div
+                className="absolute -top-16 -left-10 w-48 h-48 rounded-full pointer-events-none"
+                style={{ background: 'radial-gradient(circle, rgba(79,70,229,0.35) 0%, transparent 70%)' }}
+              />
+
+              {/* Drawer header */}
+              <div className="relative flex items-center justify-between px-5 pt-5 pb-4">
+                <span className="text-xs font-semibold uppercase tracking-[0.18em]" style={{ color: 'var(--text-muted)' }}>
+                  Menyu
+                </span>
+                <button
+                  onClick={() => setMobileOpen(false)}
+                  aria-label="Yopish"
+                  className="w-9 h-9 rounded-lg flex items-center justify-center"
+                  style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.08)' }}
+                >
+                  <X size={18} color="#F5F5F7" />
+                </button>
+              </div>
+
+              <nav className="relative flex flex-col px-4 gap-2 mt-1">
+                {mobileLinks.map((item) => {
+                  const Icon = item.icon;
+                  return (
+                    <button
+                      key={item.id}
+                      onClick={() => scrollTo(item.id)}
+                      className="group flex items-center gap-3 text-left text-[15px] font-semibold px-3 py-3.5 rounded-xl transition-colors active:scale-[0.99]"
+                      style={{ color: 'var(--text-primary)', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.06)' }}
+                    >
+                      <span
+                        className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0"
+                        style={{ background: 'rgba(79,70,229,0.18)', border: '1px solid rgba(129,140,248,0.25)' }}
+                      >
+                        <Icon size={17} color="#A5B4FC" />
+                      </span>
+                      <span className="flex-1">{item.label}</span>
+                      <ChevronRight size={16} className="opacity-40 group-hover:opacity-80 transition-opacity" />
+                    </button>
+                  );
+                })}
               </nav>
 
-              <div className="mt-auto p-6 border-t" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
+              <div className="relative mt-auto p-5 border-t" style={{ borderColor: 'rgba(255,255,255,0.08)' }}>
                 <button onClick={() => scrollTo('boglanish')} className="gradient-btn w-full justify-center">
                   Bepul konsultatsiya
                 </button>
